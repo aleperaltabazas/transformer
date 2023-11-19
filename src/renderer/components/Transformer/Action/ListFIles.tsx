@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Container, Grid } from '@mui/material';
-const remote = window.require('@electron/remote');
-import { dialog as electronDialog } from 'electron';
 
 // const fs = window.electron.fs;
-const dialog = remote.dialog as typeof electronDialog;
 
 interface Props {}
 
@@ -20,22 +17,24 @@ const ListFiles = (props: Props) => {
   //     }
   //   });
   // }
+  console.log(window.electron);
 
   return (
     <Container>
       <Grid container>
-        <Grid xs={12}>
+        <Grid item xs={12}>
           <Button
-            onClick={async () => {
-              dialog
-                .showOpenDialog({
-                  properties: ['openDirectory'],
-                })
-                .then((res) => {
-                  if (res.filePaths.length > 0) {
-                    setDirectory(res.filePaths[0]);
-                  }
-                });
+            onClick={() => {
+              window.electron.selectFolder().then(console.log);
+              // dialog
+              //   .showOpenDialog({
+              //     properties: ['openDirectory'],
+              //   })
+              //   .then((res) => {
+              //     if (res.filePaths.length > 0) {
+              //       setDirectory(res.filePaths[0]);
+              //     }
+              //   });
             }}
           >
             Select directory
