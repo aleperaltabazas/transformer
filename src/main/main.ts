@@ -15,6 +15,7 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import fs from 'fs';
+import { TransformationPipeline } from '../renderer/model/transformer';
 
 class AppUpdater {
   constructor() {
@@ -146,6 +147,8 @@ export async function selectFolder() {
   }
 }
 
+export async function dryRun(pipeline: TransformationPipeline) {}
+
 app
   .whenReady()
   .then(() => {
@@ -156,5 +159,6 @@ app
       // dock icon is clicked and there are no other windows open.
       if (mainWindow === null) createWindow();
     });
+    ipcMain.handle('dry-run', (_, pipeline) => dryRun(pipeline));
   })
   .catch(console.log);

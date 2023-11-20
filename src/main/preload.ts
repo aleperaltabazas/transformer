@@ -1,7 +1,8 @@
 // Disable no-unused-vars, broken for spread args
 /* eslint no-unused-vars: off */
 import { contextBridge, ipcRenderer, IpcRendererEvent, dialog } from 'electron';
-import { selectFolder as selectFolderImpl } from './main';
+import { selectFolder as selectFolderImpl, dryRun as dryRunImpl } from './main';
+import { TransformationPipeline } from '../renderer/model/transformer';
 
 export type Channels = 'ipc-example';
 
@@ -25,6 +26,8 @@ const electronHandler = {
   },
   selectFolder: (() =>
     ipcRenderer.invoke('dialog:openDirectory')) as typeof selectFolderImpl,
+  dryRun: ((pipeline: TransformationPipeline) =>
+    ipcRenderer.invoke('dry-run', pipeline)) as typeof dryRunImpl,
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);
