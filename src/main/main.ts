@@ -14,6 +14,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import fs from 'fs';
 
 class AppUpdater {
   constructor() {
@@ -130,17 +131,25 @@ app.on('browser-window-created', (_, window) => {
   require('@electron/remote/main').enable(window.webContents);
 });
 
+export async function selectFolder() {
+  const { canceled, filePaths } = await dialog.showOpenDialog({
+    properties: ['openDirectory'],
+  });
+  if (!canceled) {
+    const dir = filePaths[0];
+
+    const files = await fs.promises.readdir(dir);
+    return {
+      dir,
+      files,
+    };
+  }
+}
+
 app
   .whenReady()
   .then(() => {
-    ipcMain.handle('dialog:openDirectory', async () => {
-      const { canceled, filePaths } = await dialog.showOpenDialog({
-        properties: ['openDirectory'],
-      });
-      if (!canceled) {
-        return filePaths[0];
-      }
-    });
+    ipcMain.handle('dialog:openDirectory', selectFolder);
     createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the

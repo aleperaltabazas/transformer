@@ -1,6 +1,7 @@
 // Disable no-unused-vars, broken for spread args
 /* eslint no-unused-vars: off */
 import { contextBridge, ipcRenderer, IpcRendererEvent, dialog } from 'electron';
+import { selectFolder as selectFolderImpl } from './main';
 
 export type Channels = 'ipc-example';
 
@@ -22,7 +23,8 @@ const electronHandler = {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
     },
   },
-  selectFolder: () => ipcRenderer.invoke('dialog:openDirectory'),
+  selectFolder: (() =>
+    ipcRenderer.invoke('dialog:openDirectory')) as typeof selectFolderImpl,
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);

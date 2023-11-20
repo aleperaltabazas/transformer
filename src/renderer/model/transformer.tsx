@@ -1,40 +1,22 @@
-export type Action =
-  | {
-      type: "LIST_FILES";
-      dir: string;
-      query: true;
-    }
-  | {
-      type: "RUN_COMMAND";
-      command: string;
-      query: false;
-    }
-  | {
-      type: "MOVE";
-      destination: string;
-      query: false;
-    }
-  | {
-      type: "RENAME";
-      transform: (s: string) => string;
-      query: false;
-    }
-  | {
-      type: "FILTER";
-      filter: Filter;
-      query: true;
-    };
+export const LIST_FILES = 'LIST_FILES';
+export const SELECT_FILES = 'SELECT_FILES';
+export const RUN_COMMAND = 'RUN_COMMAND';
+export const MOVE = 'MOVE';
+export const RENAME = 'RENAME';
+export const FILTER = 'FILTER';
+export const UNDEFINED = 'UNDEFINED';
 
-export type ActionType =
-  | "LIST_FILES"
-  | "RUN_COMMAND"
-  | "MOVE"
-  | "RENAME"
-  | "FILTER";
+export interface SelectFilesAction {
+  type: typeof SELECT_FILES;
+  files: Array<string>;
+}
 
-export type Filter = {
-  type: "REGEX";
-  regex: string;
-};
+export interface UndefinedAction {
+  type: typeof UNDEFINED;
+}
+
+export type Action = SelectFilesAction | UndefinedAction;
+
+export type ActionType = typeof UNDEFINED | typeof SELECT_FILES;
 
 export type TransformationPipeline = Array<Action>;
