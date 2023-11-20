@@ -13,9 +13,7 @@ export default function App(): JSX.Element {
           backgroundColor: (theme) => theme.palette.background.default,
         }}
       >
-        <main>
-          <Transformer />
-        </main>
+        <Transformer />
       </Box>
     </ThemeProvider>
   );

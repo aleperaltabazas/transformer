@@ -18,8 +18,34 @@ export interface RenameFileAction {
   newName: (s: string) => string;
 }
 
-export type Action = UndefinedAction | SelectFilesAction | RenameFileAction;
+export interface FilterAction {
+  type: typeof FILTER;
+  filter: (f: string) => boolean;
+}
 
-export type ActionType = typeof UNDEFINED | typeof SELECT_FILES;
+export type Action =
+  | UndefinedAction
+  | SelectFilesAction
+  | RenameFileAction
+  | FilterAction;
+
+export type ActionType =
+  | typeof UNDEFINED
+  | typeof SELECT_FILES
+  | typeof RENAME_FILES
+  | typeof FILTER;
+
+export function dryRun(input: string[], action: Action): string[] {
+  switch (action.type) {
+    case 'UNDEFINED':
+      return [];
+    case 'RENAME_FILES':
+      return input.map(action.newName);
+    case 'FILTER':
+      return input.filter(action.filter);
+    case 'SELECT_FILES':
+      return action.files;
+  }
+}
 
 export type TransformationPipeline = Array<Action>;

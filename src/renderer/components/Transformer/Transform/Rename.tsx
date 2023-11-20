@@ -4,6 +4,7 @@ import { ActionContext } from '../../../service/ActionService';
 import { Container, TextField } from '@mui/material';
 
 interface Props {
+  input?: string[];
   action: RenameFileAction;
   idx: number;
 }

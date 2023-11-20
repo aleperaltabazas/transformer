@@ -22,13 +22,13 @@ const SelectFiles = (props: Props) => {
     <Box
       sx={{
         width: '100%',
-        height: 400,
+        height: 200,
         maxWidth: 360,
         bgcolor: 'background.paper',
       }}
     >
       <FixedSizeList
-        height={400}
+        height={200}
         width={360}
         itemSize={46}
         itemCount={props.action.files.length}

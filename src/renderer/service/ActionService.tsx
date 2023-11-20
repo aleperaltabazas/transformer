@@ -9,7 +9,7 @@ export interface ActionContextProps {
   actions: Array<Action>;
   addAction(action: Action): void;
   replaceAction(idx: number, newAction: Action): void;
-  updateAction(idx: number, f: (a: Action) => Action): void;
+  updateAction<T extends Action>(idx: number, f: (a: T) => Action): void;
   deleteAction(action: Action): void;
 }
 
@@ -24,7 +24,7 @@ const ActionService = (props: Props) => {
   const context: ActionContextProps = {
     actions: actions,
     updateAction: (idx, f) =>
-      setActions(actions.map((a, i) => (i == idx ? f(a) : a))),
+      setActions(actions.map((a, i) => (i == idx ? f(a as any) : a))),
     replaceAction: (idx, newAction) =>
       setActions(actions.map((a, i) => (i == idx ? newAction : a))),
     addAction: (action) => setActions(actions.concat(action)),

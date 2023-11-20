@@ -8,30 +8,36 @@ import {
 import React, { useContext, useState } from 'react';
 import {
   Action,
+  FilterAction,
   RENAME_FILES,
   RenameFileAction,
   SELECT_FILES,
   SelectFilesAction,
 } from '../../model/transformer';
 import { ActionContext } from '../../service/ActionService';
-import ListFolder from './Transform/ListFolder';
+import ListFolder from './Transform/SelectFiles/ListFolder';
 import Rename from './Transform/Rename';
+import Filter from './Transform/Filter';
 
 const LIST_FOLDER = 'LIST_FOLDER';
 const UNDEFINED = 'UNDEFINED';
 const RENAME = 'RENAME';
+const FILTER = 'FILTER';
 
 type ActionSelectorOptions =
   | typeof LIST_FOLDER
   | typeof UNDEFINED
-  | typeof RENAME;
+  | typeof RENAME
+  | typeof FILTER;
 
 interface Props {
+  input?: string[];
   idx: number;
   action: Action;
 }
 
-const Transform = ({ idx, action }: Props) => {
+const Transform = ({ idx, action, ...props }: Props) => {
+  console.log(action.type, props.input);
   const [actionType, setActionType] =
     useState<ActionSelectorOptions>(UNDEFINED);
   const { replaceAction } = useContext(ActionContext);
@@ -43,6 +49,8 @@ const Transform = ({ idx, action }: Props) => {
         replaceAction(idx, { type: SELECT_FILES, files: [] });
       case RENAME:
         replaceAction(idx, { type: RENAME_FILES, newName: (s) => s });
+      case FILTER:
+        replaceAction(idx, { type: FILTER, filter: () => true });
     }
 
     setActionType(event.target.value as ActionSelectorOptions);
@@ -64,12 +72,24 @@ const Transform = ({ idx, action }: Props) => {
         </MenuItem>
         <MenuItem value={LIST_FOLDER}>List folder</MenuItem>
         <MenuItem value={RENAME}>Rename</MenuItem>
+        <MenuItem value={FILTER}>Filter</MenuItem>
       </Select>
       {actionType == LIST_FOLDER && (
-        <ListFolder action={action as SelectFilesAction} idx={idx} />
+        <ListFolder
+          action={action as SelectFilesAction}
+          idx={idx}
+          input={props.input}
+        />
       )}
       {actionType == RENAME && (
-        <Rename action={action as RenameFileAction} idx={idx} />
+        <Rename
+          action={action as RenameFileAction}
+          idx={idx}
+          input={props.input}
+        />
+      )}
+      {actionType == FILTER && (
+        <Filter action={action as FilterAction} idx={idx} input={props.input} />
       )}
     </Container>
   );

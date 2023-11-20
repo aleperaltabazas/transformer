@@ -153,12 +153,12 @@ app
   .whenReady()
   .then(() => {
     ipcMain.handle('dialog:openDirectory', selectFolder);
+    ipcMain.handle('dry-run', (_, pipeline) => dryRun(pipeline));
     createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
       if (mainWindow === null) createWindow();
     });
-    ipcMain.handle('dry-run', (_, pipeline) => dryRun(pipeline));
   })
   .catch(console.log);

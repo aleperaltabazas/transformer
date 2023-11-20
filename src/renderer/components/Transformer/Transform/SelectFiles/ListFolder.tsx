@@ -1,10 +1,11 @@
 import { useContext, useState } from 'react';
-import { SELECT_FILES, SelectFilesAction } from '../../../model/transformer';
+import { SELECT_FILES, SelectFilesAction } from '../../../../model/transformer';
 import { Box, Button, Container } from '@mui/material';
-import { ActionContext } from '../../../service/ActionService';
-import SelectFiles from './SelectFiles';
+import { ActionContext } from '../../../../service/ActionService';
+import SelectFiles from '../SelectFiles';
 
 interface Props {
+  input?: string[];
   action: SelectFilesAction;
   idx: number;
 }
