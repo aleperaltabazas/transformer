@@ -1,12 +1,29 @@
 import { useContext, useState } from 'react';
 import { RenameFileAction } from '../../../model/transformer';
 import { ActionContext } from '../../../service/ActionService';
-import { Container, TextField } from '@mui/material';
+import { Container, ListItem, ListItemText, TextField } from '@mui/material';
+import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
 interface Props {
   input?: string[];
   action: RenameFileAction;
   idx: number;
+}
+
+function renderRow(f: (s: string) => string) {
+  function doRenderRow(props: ListChildComponentProps<string[]>) {
+    const { index, style, data } = props;
+
+    const mapText = f instanceof Function ? f(data[index]) : '';
+
+    return (
+      <ListItem style={style} key={index} component="div" disablePadding>
+        <ListItemText primary={`${data[index]} => ${mapText}`} />
+      </ListItem>
+    );
+  }
+
+  return doRenderRow;
 }
 
 const Rename = (props: Props) => {
@@ -34,6 +51,16 @@ const Rename = (props: Props) => {
         helperText={!valid && 'Invalid JS function'}
         onChange={updateRenamingFunction}
       />
+      <FixedSizeList
+        height={200}
+        width={360}
+        itemSize={46}
+        itemCount={(props.input || []).length}
+        overscanCount={5}
+        itemData={props.input || []}
+      >
+        {renderRow(props.action.newName)}
+      </FixedSizeList>
     </Container>
   );
 };
