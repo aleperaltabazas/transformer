@@ -15,11 +15,15 @@ const ListFolder = (props: Props) => {
   const { replaceAction } = useContext(ActionContext);
 
   async function selectDirectory() {
+    console.log(props.idx);
     const res = await window.electron.selectFolder();
     if (res) {
       setDir(res.dir);
       console.log(dir);
-      replaceAction(props.idx, { type: SELECT_FILES, files: res.files });
+      replaceAction(props.idx, {
+        type: SELECT_FILES,
+        files: res.files.map((f) => res.dir + '/' + f),
+      });
     }
   }
 

@@ -11,6 +11,7 @@ export interface UndefinedAction {
 export interface SelectFilesAction {
   type: typeof SELECT_FILES;
   files: Array<string>;
+  directory?: string;
 }
 
 export interface RenameFileAction {
@@ -23,17 +24,24 @@ export interface FilterAction {
   filter: (f: string) => boolean;
 }
 
+export interface RunCommandAction {
+  type: typeof RUN_COMMAND;
+  command: (f: string) => string;
+}
+
 export type Action =
   | UndefinedAction
   | SelectFilesAction
   | RenameFileAction
-  | FilterAction;
+  | FilterAction
+  | RunCommandAction;
 
 export type ActionType =
   | typeof UNDEFINED
   | typeof SELECT_FILES
   | typeof RENAME_FILES
-  | typeof FILTER;
+  | typeof FILTER
+  | typeof RUN_COMMAND;
 
 export function dryRun(input: string[], action: Action): string[] {
   switch (action.type) {
@@ -45,6 +53,8 @@ export function dryRun(input: string[], action: Action): string[] {
       return input.filter(action.filter);
     case 'SELECT_FILES':
       return action.files;
+    case 'RUN_COMMAND':
+      return input;
   }
 }
 

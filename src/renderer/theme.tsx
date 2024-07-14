@@ -1,17 +1,20 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme } from '@mui/material/styles';
 
 // Create a Material-UI theme instance
 // https://mui.com/customization/theming/
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#9EEAF9",
+      main: '#191919',
     },
     secondary: {
-      main: "#9575CD",
+      main: '#750E21',
     },
     background: {
-      default: "#2C2E3B",
+      default: '#E3651D',
+    },
+    error: {
+      main: '#BED754',
     },
   },
   // typography: {

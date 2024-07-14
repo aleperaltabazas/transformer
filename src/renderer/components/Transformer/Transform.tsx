@@ -11,6 +11,7 @@ import {
   FilterAction,
   RENAME_FILES,
   RenameFileAction,
+  RunCommandAction,
   SELECT_FILES,
   SelectFilesAction,
 } from '../../model/transformer';
@@ -18,17 +19,20 @@ import { ActionContext } from '../../service/ActionService';
 import ListFolder from './Transform/SelectFiles/ListFolder';
 import Rename from './Transform/Rename';
 import Filter from './Transform/Filter';
+import RunCommand from './Transform/RunCommand';
 
 const LIST_FOLDER = 'LIST_FOLDER';
 const UNDEFINED = 'UNDEFINED';
 const RENAME = 'RENAME';
 const FILTER = 'FILTER';
+const RUN_COMMAND = 'RUN_COMMAND';
 
 type ActionSelectorOptions =
   | typeof LIST_FOLDER
   | typeof UNDEFINED
   | typeof RENAME
-  | typeof FILTER;
+  | typeof FILTER
+  | typeof RUN_COMMAND;
 
 interface Props {
   input?: string[];
@@ -51,6 +55,8 @@ const Transform = ({ idx, action, ...props }: Props) => {
         replaceAction(idx, { type: RENAME_FILES, newName: (s) => s });
       case FILTER:
         replaceAction(idx, { type: FILTER, filter: () => true });
+      case RUN_COMMAND:
+        replaceAction(idx, { type: RUN_COMMAND, command: () => '' });
     }
 
     setActionType(event.target.value as ActionSelectorOptions);
@@ -73,6 +79,7 @@ const Transform = ({ idx, action, ...props }: Props) => {
         <MenuItem value={LIST_FOLDER}>List folder</MenuItem>
         <MenuItem value={RENAME}>Rename</MenuItem>
         <MenuItem value={FILTER}>Filter</MenuItem>
+        <MenuItem value={RUN_COMMAND}>Run command</MenuItem>
       </Select>
       {actionType == LIST_FOLDER && (
         <ListFolder
@@ -90,6 +97,9 @@ const Transform = ({ idx, action, ...props }: Props) => {
       )}
       {actionType == FILTER && (
         <Filter action={action as FilterAction} idx={idx} input={props.input} />
+      )}
+      {action.type == RUN_COMMAND && (
+        <RunCommand action={action} idx={idx} input={props.input} />
       )}
     </Container>
   );

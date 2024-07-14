@@ -15,7 +15,7 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import fs from 'fs';
-import { TransformationPipeline } from '../renderer/model/transformer';
+import { Action, TransformationPipeline } from '../renderer/model/transformer';
 
 class AppUpdater {
   constructor() {
@@ -154,6 +154,7 @@ app
   .then(() => {
     ipcMain.handle('dialog:openDirectory', selectFolder);
     ipcMain.handle('dry-run', (_, pipeline) => dryRun(pipeline));
+    ipcMain.handle('run', (_, pipeline) => run(pipeline));
     createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
@@ -162,3 +163,31 @@ app
     });
   })
   .catch(console.log);
+
+function doRun(input: string[], action: Action): string[] {
+  switch (action.type) {
+    case 'UNDEFINED':
+      return [];
+    case 'RENAME_FILES':
+      const output: Array<string> = [];
+      for (let f of input) {
+        const newName = action.newName(f);
+        fs.renameSync(f, newName);
+        output.push(f);
+      }
+
+      return output;
+    case 'SELECT_FILES':
+      return action.files;
+    case 'FILTER':
+      return input.filter(action.filter);
+  }
+}
+
+export async function run(pipeline: TransformationPipeline) {
+  console.log(pipeline);
+  let input: Array<string> = [];
+  for (let a of pipeline) {
+    input = doRun(input, a);
+  }
+}

@@ -23,13 +23,12 @@ const SelectFiles = (props: Props) => {
       sx={{
         width: '100%',
         height: 200,
-        maxWidth: 360,
         bgcolor: 'background.paper',
       }}
     >
       <FixedSizeList
         height={200}
-        width={360}
+        width={'80%'}
         itemSize={46}
         itemCount={props.action.files.length}
         overscanCount={5}

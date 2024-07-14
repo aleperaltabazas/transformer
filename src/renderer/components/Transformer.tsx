@@ -14,11 +14,6 @@ const Transformer = (props: Props) => {
   }
 
   const componentsWithActions = () => {
-    const seed: [JSX.Element, string[]] = [
-      <Transform action={actions[0]} idx={0} input={[]} />,
-      dryRun([], actions[0]),
-    ];
-
     const components: Array<JSX.Element> = [];
     let input: string[] = [];
 
@@ -30,12 +25,21 @@ const Transformer = (props: Props) => {
     return components;
   };
 
+  async function run() {
+    await window.electron.run(actions);
+  }
+
   return (
     <Grid container rowSpacing={4}>
       {actions.length > 0 && componentsWithActions()}
       <Grid item xs={12}>
         <Button variant="outlined" onClick={addUndefinedAction} size="small">
           Add action
+        </Button>
+      </Grid>
+      <Grid item xs={12}>
+        <Button variant="outlined" onClick={run}>
+          Run
         </Button>
       </Grid>
     </Grid>

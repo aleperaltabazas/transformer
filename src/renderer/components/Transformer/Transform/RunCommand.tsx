@@ -1,16 +1,16 @@
 import { useContext, useState } from 'react';
-import { RenameFileAction } from '../../../model/transformer';
+import { RunCommandAction } from '../../../model/transformer';
 import { ActionContext } from '../../../service/ActionService';
 import { Container, ListItem, ListItemText, TextField } from '@mui/material';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
 interface Props {
   input?: string[];
-  action: RenameFileAction;
+  action: RunCommandAction;
   idx: number;
 }
 
-function renderRow(f: (s: string) => string) {
+function renderRow(f: (s: string) => void) {
   function doRenderRow(props: ListChildComponentProps<string[]>) {
     const { index, style, data } = props;
 
@@ -29,7 +29,7 @@ function renderRow(f: (s: string) => string) {
   return doRenderRow;
 }
 
-const Rename = (props: Props) => {
+const RunCommand = (props: Props) => {
   const { replaceAction } = useContext(ActionContext);
   const [valid, setValid] = useState(true);
 
@@ -37,7 +37,7 @@ const Rename = (props: Props) => {
     try {
       replaceAction(props.idx, {
         ...props.action,
-        newName: eval(event.target.value),
+        command: eval(event.target.value),
       });
       console.log('valid');
       setValid(true);
@@ -62,10 +62,10 @@ const Rename = (props: Props) => {
         overscanCount={5}
         itemData={props.input || []}
       >
-        {renderRow(props.action.newName)}
+        {renderRow(props.action.command)}
       </FixedSizeList>
     </Container>
   );
 };
 
-export default Rename;
+export default RunCommand;
